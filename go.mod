@@ -1,3 +1,3 @@
-module github.com/miki/learn-go-mc
+module github.com/353solutions/learn-go-mc
 
 go 1.26
