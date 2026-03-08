@@ -47,6 +47,11 @@ func (v *Vehicle) Move(lat, lng float64) error {
 	return nil
 }
 
+type Car struct {
+	Vehicle
+	LicensePlate string
+}
+
 func main() {
 	v := Vehicle{
 		Lng: 34.7818,
@@ -69,6 +74,17 @@ func main() {
 		fmt.Println("ERROR:", err)
 	} else {
 		fmt.Printf("v2 (move): %#v\n", v2)
+	}
+
+	c := Car{
+		LicensePlate: "G0PH3R",
+	}
+	fmt.Printf("c: %#v\n", c)
+	fmt.Println("c.Lat:", c.Lat)
+	if err := c.Move(10, 20); err != nil {
+		fmt.Println("ERROR:", err)
+	} else {
+		fmt.Printf("c (move): %#v\n", c)
 	}
 
 }
