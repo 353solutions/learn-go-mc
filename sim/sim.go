@@ -52,6 +52,27 @@ type Car struct {
 	LicensePlate string
 }
 
+type Mover interface {
+	Move(lat, lng float64) error
+}
+
+func MoveAll(movers []Mover, lat, lng float64) error {
+	for _, m := range movers {
+		if err := m.Move(lat, lng); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+/*
+- Interface say what we need, not what we provide
+- Interfaces are small (stdlib avg < 2), if you have more than 4 - rethink
+- Rule of thumb: accept interface, return types
+- Start with types, discover interfaces
+*/
+
 func main() {
 	v := Vehicle{
 		Lng: 34.7818,
@@ -87,4 +108,13 @@ func main() {
 		fmt.Printf("c (move): %#v\n", c)
 	}
 
+	v3, _ := NewVehicle(1, 2)
+	c2 := &Car{LicensePlate: "MVALL"}
+	movers := []Mover{v3, c2, &c}
+	if err := MoveAll(movers, 55, 37); err != nil {
+		fmt.Println("MoveAll ERROR:", err)
+	} else {
+		fmt.Printf("v3 after MoveAll: %#v\n", v3)
+		fmt.Printf("c2 after MoveAll: %#v\n", c2)
+	}
 }
