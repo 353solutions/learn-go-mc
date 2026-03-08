@@ -16,16 +16,35 @@ func NewVehicle(lat, lng float64) *Vehicle {
 func NewVehicle(lat, lng float64) (*Vehicle, error) {
 */
 
-func NewVehicle(lat, lng float64) (Vehicle, error) {
+func validateLatLng(lat, lng float64) error {
 	if lat < -90 || lat > 90 {
-		return Vehicle{}, fmt.Errorf("invalid lat: %#v", lat)
+		return fmt.Errorf("invalid lat: %#v", lat)
 	}
 
 	if lng < -180 || lng > 180 {
-		return Vehicle{}, fmt.Errorf("invalid lng: %#v", lng)
+		return fmt.Errorf("invalid lng: %#v", lng)
 	}
 
-	return Vehicle{Lat: lat, Lng: lng}, nil
+	return nil
+}
+
+func NewVehicle(lat, lng float64) (*Vehicle, error) {
+	if err := validateLatLng(lat, lng); err != nil {
+		return nil, err
+	}
+
+	return &Vehicle{Lat: lat, Lng: lng}, nil
+}
+
+// v is called "the reciever"
+func (v *Vehicle) Move(lat, lng float64) error {
+	if err := validateLatLng(lat, lng); err != nil {
+		return err
+	}
+
+	v.Lat = lat
+	v.Lng = lng
+	return nil
 }
 
 func main() {
@@ -45,5 +64,11 @@ func main() {
 
 	var v2 Vehicle
 	fmt.Println("v2:", v2)
+
+	if err := v2.Move(40, 50); err != nil {
+		fmt.Println("ERROR:", err)
+	} else {
+		fmt.Printf("v2 (move): %#v\n", v2)
+	}
 
 }
